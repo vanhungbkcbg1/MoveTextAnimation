@@ -79,32 +79,17 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-//            if (!is_click_again) {
-//                current_x = v.getLeft();
-//                current_y = v.getTop();
-//                ObjectAnimator animX = ObjectAnimator.ofFloat(v, "x", 16);
-//                ObjectAnimator animY = ObjectAnimator.ofFloat(v, "y", 16);
-//                AnimatorSet animSetXY = new AnimatorSet();
-//                animSetXY.playTogether(animX, animY);
-//                animSetXY.start();
-//            } else {
-//                ObjectAnimator animX = ObjectAnimator.ofFloat(v, "x", current_x);
-//                ObjectAnimator animY = ObjectAnimator.ofFloat(v, "y", current_y);
-//                AnimatorSet animSetXY = new AnimatorSet();
-//                animSetXY.playTogether(animX, animY);
-//                animSetXY.start();
-//            }
-//            is_click_again = !is_click_again;
+
             Position position=(Position)v.getTag();
             if (position.getClick_count()==0) {
                 if (left == 0 && top == 0) {
-                    ObjectAnimator animX = ObjectAnimator.ofFloat(v, "x", 16);
-                    ObjectAnimator animY = ObjectAnimator.ofFloat(v, "y", 16);
+                    ObjectAnimator animX = ObjectAnimator.ofFloat(v, "x", 10);
+                    ObjectAnimator animY = ObjectAnimator.ofFloat(v, "y", 5);
                     AnimatorSet animSetXY = new AnimatorSet();
                     animSetXY.playTogether(animX, animY);
                     animSetXY.start();
-                    left = 16;
-                    top = 16;
+                    left = 10;
+                    top = 5;
                     width = v.getWidth();
                     height = v.getHeight();
                 } else {
@@ -117,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
                         animSetXY.playTogether(animX, animY);
                         animSetXY.start();
                     } else {
-                        left = 16;
-                        top = top + height + 10;
+                        left = 10;
+                        top = top + height + 5;
                         ObjectAnimator animX = ObjectAnimator.ofFloat(v, "x", left);
                         ObjectAnimator animY = ObjectAnimator.ofFloat(v, "y", top);
                         AnimatorSet animSetXY = new AnimatorSet();
