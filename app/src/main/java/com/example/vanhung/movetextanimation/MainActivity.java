@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,22 +14,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
-import com.wefika.flowlayout.FlowLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
 
-    RelativeLayout layout_root;
-
-    boolean is_click_again = false;
-    float current_x = 0;
-    float current_y = 0;
-    int maxScreenWidth;
-
-    int left;
-    int top;
-    int width;
-    int height;
+    private RelativeLayout layout_root;
+    private boolean is_click_again = false;
+    private float current_x = 0;
+    private float current_y = 0;
+    private int maxScreenWidth;
+    private List<View>controls=new ArrayList<>();
+    private int left;
+    private int top;
+    private int width;
+    private int height;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,44 +75,56 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    void rebuildPosition(View v,Position position)
+    {
+        for (int i=0;i<controls.size();i++)
+        {
+            View current_control=controls.get(i);
+            if (i==0)
+            {
+                ObjectAnimator animX = ObjectAnimator.ofFloat(current_control, "x", 10);
+                ObjectAnimator animY = ObjectAnimator.ofFloat(current_control, "y", 5);
+                AnimatorSet animSetXY = new AnimatorSet();
+                animSetXY.playTogether(animX, animY);
+                animSetXY.start();
+                left = 10;
+                top = 5;
+                width = current_control.getWidth();
+                height = current_control.getHeight();
+            }else
+            {
+                int actual_width = current_control.getWidth();
+                left = left + width + 10;
+                if (left + actual_width <= maxScreenWidth) {
+                    ObjectAnimator animX = ObjectAnimator.ofFloat(current_control, "x", left);
+                    ObjectAnimator animY = ObjectAnimator.ofFloat(current_control, "y", top);
+                    AnimatorSet animSetXY = new AnimatorSet();
+                    animSetXY.playTogether(animX, animY);
+                    animSetXY.start();
+                } else {
+                    left = 10;
+                    top = top + height + 5;
+                    ObjectAnimator animX = ObjectAnimator.ofFloat(current_control, "x", left);
+                    ObjectAnimator animY = ObjectAnimator.ofFloat(current_control, "y", top);
+                    AnimatorSet animSetXY = new AnimatorSet();
+                    animSetXY.playTogether(animX, animY);
+                    animSetXY.start();
+                }
+            }
+            if (v!=null) {
+                position.setClick_count(1);
+                v.setTag(position);
+            }
+        }
+    }
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
             Position position=(Position)v.getTag();
             if (position.getClick_count()==0) {
-                if (left == 0 && top == 0) {
-                    ObjectAnimator animX = ObjectAnimator.ofFloat(v, "x", 10);
-                    ObjectAnimator animY = ObjectAnimator.ofFloat(v, "y", 5);
-                    AnimatorSet animSetXY = new AnimatorSet();
-                    animSetXY.playTogether(animX, animY);
-                    animSetXY.start();
-                    left = 10;
-                    top = 5;
-                    width = v.getWidth();
-                    height = v.getHeight();
-                } else {
-                    int actual_width = v.getWidth();
-                    left = left + width + 10;
-                    if (left + actual_width <= maxScreenWidth) {
-                        ObjectAnimator animX = ObjectAnimator.ofFloat(v, "x", left);
-                        ObjectAnimator animY = ObjectAnimator.ofFloat(v, "y", top);
-                        AnimatorSet animSetXY = new AnimatorSet();
-                        animSetXY.playTogether(animX, animY);
-                        animSetXY.start();
-                    } else {
-                        left = 10;
-                        top = top + height + 5;
-                        ObjectAnimator animX = ObjectAnimator.ofFloat(v, "x", left);
-                        ObjectAnimator animY = ObjectAnimator.ofFloat(v, "y", top);
-                        AnimatorSet animSetXY = new AnimatorSet();
-                        animSetXY.playTogether(animX, animY);
-                        animSetXY.start();
-                    }
-                    //animSetXY.start();
-                }
-                position.setClick_count(1);
-                v.setTag(position);
+                controls.add(v);
+                rebuildPosition(v,position);
             }
             else
             {
@@ -125,6 +136,8 @@ public class MainActivity extends AppCompatActivity {
                 //v.setTag(1,0);
                 position.setClick_count(0);
                 v.setTag(position);
+                controls.remove(v);
+                rebuildPosition(null,null);
             }
         }
     };
