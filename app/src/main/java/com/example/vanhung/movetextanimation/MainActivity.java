@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < number_view; i++) {
             if (width == 0 && height == 0) {
                 Button btn = new Button(this);
-                btn.setText("vanhung" + String.valueOf(i));
+                btn.setText("Answer" + String.valueOf(i));
                 btn.setOnClickListener(onClickListener);
                 btn.setTextColor(Color.WHITE);
                 btn.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
 
                 Button btn = new Button(this);
-                btn.setText("vanhung" + String.valueOf(i));
+                btn.setText("Answer" + String.valueOf(i));
                 btn.setTextColor(Color.WHITE);
                 btn.setOnClickListener(onClickListener);
                 btn.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
